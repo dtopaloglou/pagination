@@ -2,7 +2,7 @@ Pagination Class
 ========
 <strong>Screenshot</strong>
 
-![ScreenShot](https://raw.github.com/dtopaloglou/theUtils/gh-pages/screenshots/pages.png)
+![ScreenShot](https://raw.github.com/dtopaloglou/pagination/gh-pages/screenshots/pages.png)
 
 
 <strong>PDO Connection</strong>
