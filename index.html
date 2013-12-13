@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pagination by dtopaloglou</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/dtopaloglou/pagination">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/dtopaloglou/pagination/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/dtopaloglou/pagination/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Pagination</h1>
+          <p>Pagination Class for PHP</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/dtopaloglou">dtopaloglou</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="pagination-class" class="anchor" href="#pagination-class"><span class="octicon octicon-link"></span></a>Pagination Class</h1>
+
+<p><strong>Screenshot</strong></p>
+
+<p><img src="https://raw.github.com/dtopaloglou/theUtils/gh-pages/screenshots/pages.png" alt="ScreenShot"></p>
+
+<p><strong>PDO Connection</strong>
+<br>
+Pagination queries the database with the PDO object. Therefore, you need to connect to the database via PDO.</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$dsn</span> <span class="o">=</span> <span class="s1">'mysql:host=MYHOST;dbname=MYDB;port=3306;connect_timeout=15'</span><span class="p">;</span>            
+<span class="nv">$user</span> <span class="o">=</span> <span class="s1">'john'</span><span class="p">;</span>             
+<span class="nv">$password</span> <span class="o">=</span> <span class="s1">'smith'</span><span class="p">;</span>
+
+<span class="nv">$PDO</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PDO</span><span class="p">(</span><span class="nv">$dsn</span><span class="p">,</span> <span class="nv">$user</span><span class="p">,</span> <span class="nv">$password</span><span class="p">);</span>
+</pre></div>
+
+<p>Once you've created your connection, it needs to be implemented. </p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$pagination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">paginate</span><span class="p">(</span><span class="nv">$PDO</span><span class="p">);</span>
+</pre></div>
+
+<p>And that's it! But we don't want to do that just yet. We need to build a query before doing anything else.</p>
+
+<p><strong>Building Queries</strong>
+<br>
+One thing to be noted, is that all SQL queries must be formed in such a way that they accept named placeholders. Here's an example of an SQL statement with a name placeholder:</p>
+
+<div class="highlight highlight-php"><pre>
+ <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">"SELECT phone FROM customers WHERE customer_name=:name"</span><span class="p">;</span>
+</pre></div>
+
+<p>Since the idea is to have named placeholders to all the legwork, an array must be created in order to hold values of your queries. The tricky part is to be able to append to your parameters into an array depending on what you've created as a search as a search engine.</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$parameters</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'phone'</span><span class="p">]))</span>
+<span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">"SELECT address FROM customers WHERE phone=:phone"</span><span class="p">;</span>
+    <span class="nv">$parameters</span><span class="p">[</span><span class="s1">':phone'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'555-2401'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'phone'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]))</span>
+<span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">"SELECT address FROM customers WHERE phone=:phone AND customer_name:name "</span><span class="p">;</span>
+    <span class="nv">$parameters</span><span class="p">[</span><span class="s1">':phone'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'555-2401'</span><span class="p">;</span>
+    <span class="nv">$parameters</span><span class="p">[</span><span class="s1">':name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Kookies Inc.'</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+
+<p>The first 'if' statement checks the address depending on the phone number that's given. Notice a <code>:phone</code> placeholder has been placed (the actual name is arbitrary). The second statement checks the address depending on the phone number and the customer's name, and hence there needs to be two placeholders and two parameters matching them. Please note the name of the placeholder must match the one found in the array.</p>
+
+<p>The next thing to do is to include your SQL statement along with your parameters in the pagination.</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$parameters</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'phone'</span><span class="p">]))</span>
+<span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">"SELECT address FROM customers WHERE phone=:phone"</span><span class="p">;</span>
+    <span class="nv">$parameters</span><span class="p">[</span><span class="s1">':phone'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'555-2401'</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'phone'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]))</span>
+<span class="p">{</span>
+    <span class="nv">$sql</span> <span class="o">=</span> <span class="s2">"SELECT address FROM customers WHERE phone=:phone AND customer_name:name "</span><span class="p">;</span>
+    <span class="nv">$parameters</span><span class="p">[</span><span class="s1">':phone'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'555-2401'</span><span class="p">;</span>
+    <span class="nv">$parameters</span><span class="p">[</span><span class="s1">':name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Kookies Inc.'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nv">$pagination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">paginate</span><span class="p">(</span><span class="nv">$PDO</span><span class="p">);</span> 
+<span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">query</span><span class="p">(</span><span class="nv">$sql</span><span class="p">,</span> <span class="nv">$parameters</span><span class="p">);</span>
+</pre></div>
+
+<p>If you don't feel like using placeholders, you may use variables in your SQL statement and neglect adding your  <code>$parameters</code> array: it will execute normally (not recommended).</p>
+
+<p><strong>Displaying results</strong></p>
+
+<p>At this point, your SQL statement has been queried, but we haven't displayed anything. In order for results to be displayed, we need to know the page we're on and how many results we wish to display. The default number of results is 50 per page, but this can be changed. </p>
+
+<p>For simplistic purposes, the page number is being retrieved via a <code>$_GET</code>variable. Although how you tell the class what page number you're on is up to you. </p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setCurrentPage</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'page'</span><span class="p">]);</span>
+</pre></div>
+
+<p>The idea of the pagination class to is to display links and results according to the page number and the number of results per page. To display your links, simply add <code>$pagination-&gt;displayLinks();</code> anywhere on the page you wish to have your links displayed. However, we're still missing the results. To display your results, you may simply use a <code>while</code> loop to fetch the results from the query and place it where needed.</p>
+
+<div class="highlight highlight-php"><pre><span class="k">while</span><span class="p">(</span><span class="nv">$data</span> <span class="o">=</span> <span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">fetch</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="k">echo</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'address'</span><span class="p">]</span><span class="o">.</span><span class="s1">'\n'</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+
+<p>At this point, your results will be displayed.</p>
+
+<p><strong>What about the links?</strong></p>
+
+<p>You may have been wondering where the links point to when clicked. By default, the links point to your current page and append a <code>page</code> variable. In other words, <code>$_SERVER['PHP_SELF']</code> is the current page you're on a a simple <code> ?page= </code> will be appended to it to keep track of the page number. If <code>php $_SERVER['PHP_SELF']</code> is NOT the page you're on, then you may provide an alternate page instead:</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setReturnUrl</span><span class="p">(</span><span class="s2">"blah/mypage.php"</span><span class="p">);</span>
+</pre></div>
+
+<p>The other question you might be askign yourself is, what about all the <code>$_GET</code> variables I might already have? Well this part I left it up to the developer. I won't deal with what you have as data contained in your  <code>php $_GET</code>. However, the solution to this is to provide the query string in the class, and it'll re-assemble it for you and it will show up in the links.</p>
+
+<p>Here's an example of what is meant: </p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$url</span> <span class="o">=</span> <span class="s2">"?phone=</span><span class="si">$_GET[phone]&amp;name=$_GET[name]</span><span class="s2"> </span>
+</pre></div>
+
+<p>. Please note that you must NOT include the <code>$_GET[page]</code> variable as that will be automatically appended to the links during build.</p>
+
+<p>Once you've set up your variables, make sure it's valid or it will not be added. </p>
+
+<div class="highlight highlight-php"><pre>
+<span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setUrl</span><span class="p">(</span><span class="nv">$url</span><span class="p">);</span>
+</pre></div>
+
+<p>The output of this result should look like this: <code>&lt;a href="blah/mypage.php?phone=$_GET[phone]&amp;name=$_GET[name]"&gt;</code> and is what you should see as your link. Keep in mind though that the <code>page</code> variable will also be included.</p>
+
+<h2>
+<a name="useful-stuff" class="anchor" href="#useful-stuff"><span class="octicon octicon-link"></span></a>Useful stuff</h2>
+
+<p><strong>Setting a language</strong>
+The default language is English (link titles), but this can be changed.</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$language</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span>      <span class="o">=</span> <span class="s1">'Page '</span><span class="p">;</span>
+<span class="nv">$language</span><span class="p">[</span><span class="s1">'forward'</span><span class="p">]</span>    <span class="o">=</span> <span class="s1">'Forward by '</span><span class="p">;</span>
+<span class="nv">$language</span><span class="p">[</span><span class="s1">'previous'</span><span class="p">]</span>   <span class="o">=</span> <span class="s1">'Previous by '</span><span class="p">;</span>
+<span class="nv">$language</span><span class="p">[</span><span class="s1">'last'</span><span class="p">]</span>       <span class="o">=</span> <span class="s1">'Last page '</span><span class="p">;</span>
+<span class="nv">$language</span><span class="p">[</span><span class="s1">'first'</span><span class="p">]</span>      <span class="o">=</span> <span class="s1">'First page '</span><span class="p">;</span>
+<span class="nv">$language</span><span class="p">[</span><span class="s1">'next'</span><span class="p">]</span>       <span class="o">=</span> <span class="s1">'Next '</span><span class="p">;</span>
+<span class="nv">$language</span><span class="p">[</span><span class="s1">'back'</span><span class="p">]</span>       <span class="o">=</span> <span class="s1">'Back '</span><span class="p">;</span>
+
+<span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setLanguageTITLES</span><span class="p">(</span><span class="nv">$language</span><span class="p">);</span>
+
+</pre></div>
+
+<p><strong>Maximum results per page</strong></p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setPerPage</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span> <span class="c1">// 100 results per page</span>
+</pre></div>
+
+<p><strong>Number of links to be show</strong></p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setAdjacentLinks</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span> <span class="c1">// displays 8 links </span>
+</pre></div>
+
+<p><strong>Customized CSS</strong>
+The <code>paginate.css</code> CSS file comes included to get you started. The default class names for the links are:</p>
+
+<div class="highlight highlight-php"><pre><span class="k">private</span> <span class="nv">$_divClass</span>      <span class="o">=</span> <span class="s1">'pagination'</span><span class="p">;</span>             <span class="c1">// Main div class name holding the links</span>
+<span class="k">private</span> <span class="nv">$_currentClass</span>  <span class="o">=</span> <span class="s1">'current'</span><span class="p">;</span>                <span class="c1">// Current active link span class name</span>
+<span class="k">private</span> <span class="nv">$_disableClass</span>  <span class="o">=</span> <span class="s1">'disabled'</span><span class="p">;</span>               <span class="c1">// Non-active links span class name</span>
+</pre></div>
+
+<p>If you're using a specific namespace, then you can modify the default class names by simply creating an array with the values you want:</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$css</span><span class="p">[</span><span class="s1">'paginate'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'myCustomPaginateName'</span><span class="p">;</span>
+<span class="nv">$css</span><span class="p">[</span><span class="s1">'current'</span><span class="p">]</span>  <span class="o">=</span> <span class="s1">'myCustomCurrentName'</span><span class="p">;</span>
+<span class="nv">$css</span><span class="p">[</span><span class="s1">'disabled'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'myCustomDisabledName'</span><span class="p">;</span>
+
+<span class="nv">$pagination</span><span class="o">-&gt;</span><span class="na">setClasses</span><span class="p">(</span><span class="nv">$css</span><span class="p">);</span>
+</pre></div>
+
+<p>Be sure that it matches what you have in your CSS file.</p>
+
+<p><strong>CSS File</strong></p>
+
+<div class="highlight highlight-css"><pre><span class="nt">div</span><span class="nc">.pagination</span> <span class="p">{</span>
+    <span class="k">text-align</span><span class="o">:</span><span class="k">center</span><span class="p">;</span>
+    <span class="k">height</span><span class="o">:</span><span class="m">22px</span><span class="p">;</span>
+    <span class="k">line-height</span><span class="o">:</span><span class="m">21px</span><span class="p">;</span>
+    <span class="k">clear</span><span class="o">:</span><span class="k">both</span><span class="p">;</span>
+    <span class="k">padding</span><span class="o">:</span><span class="m">4px</span><span class="p">;</span>
+    <span class="k">min-width</span><span class="o">:</span><span class="m">350px</span><span class="p">;</span>
+    <span class="k">font-weight</span><span class="o">:</span><span class="k">bold</span><span class="p">;</span>
+    <span class="k">color</span><span class="o">:</span><span class="m">#DCDCDC</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">div</span><span class="nc">.pagination</span> <span class="nt">a</span><span class="nd">:link</span> <span class="p">{</span>
+    <span class="k">padding</span><span class="o">:</span><span class="m">7px</span><span class="p">;</span>
+    <span class="k">padding-top</span><span class="o">:</span><span class="m">2px</span><span class="p">;</span>
+    <span class="k">padding-bottom</span><span class="o">:</span><span class="m">2px</span><span class="p">;</span>
+    <span class="k">margin-left</span><span class="o">:</span><span class="m">7px</span><span class="p">;</span>
+    <span class="k">text-decoration</span><span class="o">:</span><span class="k">none</span><span class="p">;</span>
+    <span class="k">color</span><span class="o">:</span><span class="m">#707070</span><span class="p">;</span>
+    <span class="k">width</span><span class="o">:</span><span class="m">22px</span><span class="p">;</span>
+    <span class="k">font-weight</span><span class="o">:</span><span class="k">normal</span><span class="p">;</span>
+    <span class="o">-</span><span class="n">moz</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">3px</span> <span class="m">3px</span> <span class="m">5px</span> <span class="m">#D0D0D0</span><span class="p">;</span>
+    <span class="o">-</span><span class="n">webkit</span><span class="o">-</span><span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">3px</span> <span class="m">3px</span> <span class="m">5px</span> <span class="m">#D0D0D0</span><span class="p">;</span>
+    <span class="n">box</span><span class="o">-</span><span class="n">shadow</span><span class="o">:</span> <span class="m">3px</span> <span class="m">3px</span> <span class="m">5px</span> <span class="m">#D0D0D0</span><span class="p">;</span>
+    <span class="k">border</span><span class="o">:</span><span class="k">solid</span> <span class="m">1px</span> <span class="m">#828282</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">div</span><span class="nc">.pagination</span> <span class="nt">a</span><span class="nd">:visited</span> <span class="p">{</span>
+    <span class="k">color</span><span class="o">:</span> <span class="m">#D56A00</span><span class="p">;</span>
+    <span class="k">border</span><span class="o">:</span><span class="k">solid</span> <span class="m">1px</span> <span class="m">#828282</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">div</span><span class="nc">.pagination</span> <span class="nt">a</span><span class="nd">:hover</span> <span class="p">{</span>
+    <span class="k">color</span><span class="o">:</span><span class="m">#0072BC</span><span class="p">;</span>
+    <span class="k">text-decoration</span><span class="o">:</span> <span class="k">underline</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">div</span><span class="nc">.pagination</span> <span class="nt">span</span><span class="nc">.current</span> <span class="p">{</span>
+    <span class="k">padding</span><span class="o">:</span><span class="m">7px</span><span class="p">;</span>
+    <span class="k">padding-top</span><span class="o">:</span><span class="m">2px</span><span class="p">;</span>
+    <span class="k">padding-bottom</span><span class="o">:</span><span class="m">2px</span><span class="p">;</span>
+    <span class="k">margin-left</span><span class="o">:</span><span class="m">7px</span><span class="p">;</span>
+    <span class="k">color</span><span class="o">:</span><span class="m">#353535</span><span class="p">;</span>
+    <span class="k">cursor</span><span class="o">:</span><span class="k">default</span><span class="p">;</span>
+    <span class="k">border</span><span class="o">:</span><span class="k">solid</span> <span class="m">2px</span> <span class="m">#D0D0D0</span><span class="p">;</span>
+    <span class="k">background-color</span><span class="o">:</span> <span class="m">#CCC</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">div</span><span class="nc">.pagination</span> <span class="nt">span</span><span class="nc">.disabled</span> <span class="p">{</span>
+    <span class="k">padding</span><span class="o">:</span><span class="m">7px</span><span class="p">;</span>
+    <span class="k">padding-top</span><span class="o">:</span><span class="m">2px</span><span class="p">;</span>
+    <span class="k">padding-bottom</span><span class="o">:</span><span class="m">2px</span><span class="p">;</span>
+    <span class="k">margin-left</span><span class="o">:</span><span class="m">7px</span><span class="p">;</span>
+    <span class="k">text-decoration</span><span class="o">:</span><span class="k">none</span><span class="p">;</span>
+    <span class="k">color</span><span class="o">:</span><span class="m">#CBCBCB</span><span class="p">;</span>
+    <span class="k">cursor</span><span class="o">:</span><span class="n">not</span><span class="o">-</span><span class="n">allowed</span><span class="p">;</span>
+    <span class="k">border</span><span class="o">:</span><span class="k">solid</span> <span class="m">1px</span> <span class="m">#D0D0D0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
