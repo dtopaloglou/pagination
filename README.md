@@ -226,4 +226,4 @@ If you wish to display your results based on what page you're on and the number 
 echo $pagination->resultOffset()
 ```
 
-Anywhere you like on the page. The above screenshot displayes <strong>1 - 50 / 5,603</strong> (results 1 thru 50 out of 5,603). On page 2, this will display 51 - 100 / 5,603 and so on.
+Anywhere you like on the page. The above screenshot displayes <strong>1 - 50 / 5,603</strong> (results 1 thru 50 out of 5,603). On page 2, this will display <strong>51 - 100 / 5,603</strong> and so on.
