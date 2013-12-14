@@ -105,7 +105,7 @@ You may have been wondering where the links point to when clicked. By default, t
 $pagination->setReturnUrl("blah/mypage.php");
 ```
 
-The other question you might be askign yourself is, what about all the ```$_GET ``` variables I might already have? Well this part I left it up to the developer. I won't deal with what you have as data contained in your  ```php $_GET ```. However, the solution to this is to provide the query string in the class, and it'll re-assemble it for you and it will show up in the links.
+The other question you might be askign yourself is, what about all the ```$_GET ``` variables I might already have? Well this part I left it up to the developer. I won't deal with what you have as data contained in your  ```$_GET ```. However, the solution to this is to provide the query string in the class, and it'll re-assemble it for you and it will show up in the links.
 
 Here's an example of what is meant: 
 ```php 
@@ -227,3 +227,5 @@ echo $pagination->resultOffset()
 ```
 
 Anywhere you like on the page. The above screenshot displayes <strong>1 - 50 / 5,603</strong> (results 1 thru 50 out of 5,603). On page 2, this will display <strong>51 - 100 / 5,603</strong> and so on.
+
+
