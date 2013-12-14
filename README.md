@@ -139,10 +139,6 @@ $language['back']       = 'Back ';
 $pagination->setLanguageTITLES($language);
 
 ```
-<strong>Maximum results per page</strong>
-```php
-$pagination->setPerPage(100); // 100 results per page
-```
 <strong>Number of links to be show</strong>
 ```php
 $pagination->setAdjacentLinks(8); // displays 8 links 
