@@ -53,7 +53,7 @@ if(isset($_GET['phone']) && isset($_GET['name']))
 
 The first 'if' statement checks the address depending on the phone number that's given. Notice a <code>:phone</code> placeholder has been placed (the actual name is arbitrary). The second statement checks the address depending on the phone number and the customer's name, and hence there needs to be two placeholders and two parameters matching them. Please note the name of the placeholder must match the one found in the array.
 
-The next thing to do is to include your SQL statement along with your parameters in the pagination.
+The next thing to do is to include your SQL statement along with your parameters in the pagination. You also need to include the maximum number of results you wish to output on your page (third parameter).
 
 ```php
 $parameters = array();
@@ -71,7 +71,7 @@ if(isset($_GET['phone']) && isset($_GET['name']))
 }
 
 $pagination = new paginate($PDO); 
-$pagination->query($sql, $parameters);
+$pagination->query($sql, $parameters, 100);
 ```
 
 If you don't feel like using placeholders, you may use variables in your SQL statement and neglect adding your  ``` $parameters ``` array: it will execute normally (not recommended).
@@ -105,7 +105,7 @@ You may have been wondering where the links point to when clicked. By default, t
 $pagination->setReturnUrl("blah/mypage.php");
 ```
 
-The other question you might be askign yourself is, what about all the ```$_GET ``` variables I might already have? Well this part I left it up to the developer. I won't deal with what you have as data contained in your  ```php $_GET ```. However, the solution to this is to provide the query string in the class, and it'll re-assemble it for you and it will show up in the links.
+The other question you might be askign yourself is, what about all the ```$_GET ``` variables I might already have? Well this part I left it up to the developer. I won't deal with what you have as data contained in your  ```$_GET ```. However, the solution to this is to provide the query string in the class, and it'll re-assemble it for you and it will show up in the links.
 
 Here's an example of what is meant: 
 ```php 
@@ -138,10 +138,6 @@ $language['back']       = 'Back ';
 
 $pagination->setLanguageTITLES($language);
 
-```
-<strong>Maximum results per page</strong>
-```php
-$pagination->setPerPage(100); // 100 results per page
 ```
 <strong>Number of links to be show</strong>
 ```php
@@ -221,3 +217,15 @@ div.pagination span.disabled {
 	border:solid 1px #D0D0D0;
 }
 ```
+<strong>Display page sections</strong>
+
+![ScreenShot](https://raw.github.com/dtopaloglou/pagination/gh-pages/screenshots/disp.png)
+
+If you wish to display your results based on what page you're on and the number of results, simply add
+```php
+echo $pagination->resultOffset()
+```
+
+Anywhere you like on the page. The above screenshot displayes <strong>1 - 50 / 5,603</strong> (results 1 thru 50 out of 5,603). On page 2, this will display <strong>51 - 100 / 5,603</strong> and so on.
+
+
