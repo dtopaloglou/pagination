@@ -98,7 +98,7 @@
 		
 		
 
-		<b>Located at</b> <a href="source-class-paginate.html#3-520" title="Go to source code">paginate.php</a><br />
+		<b>Located at</b> <a href="source-class-paginate.html#3-524" title="Go to source code">paginate.php</a><br />
 	</div>
 
 
@@ -1043,14 +1043,16 @@ statement.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_levels">#</a>
-		<code><a href="source-class-paginate.html#377-393" title="Go to source code">levels</a>( )</code>
+		<code><a href="source-class-paginate.html#377-395" title="Go to source code">levels</a>( )</code>
 
 		<div class="description short">
 			Contains an array for the amount of pages to be skipped after a certain page
 number threshold. The higher the amount of page results, the larger the skip.
 <p>Example:<br />
-After 100 pages, the skipper link will jump forward 10 pages. At 1000 pages, the
-skipper link will jump forward 75 pages instead of 10.</p>
+After 100 pages, the skipper links will jump 10 pages. At 1000 pages, the
+skipper links will jump 75 pages instead of 10. At 5000 pages, the skipper links
+will jump 250 pages instead of 75 At 10000 pages, the skipper links will jump
+500 pages instead of 250</p>
 
 		</div>
 
@@ -1058,8 +1060,10 @@ skipper link will jump forward 75 pages instead of 10.</p>
 			Contains an array for the amount of pages to be skipped after a certain page
 number threshold. The higher the amount of page results, the larger the skip.
 <p>Example:<br />
-After 100 pages, the skipper link will jump forward 10 pages. At 1000 pages, the
-skipper link will jump forward 75 pages instead of 10.</p>
+After 100 pages, the skipper links will jump 10 pages. At 1000 pages, the
+skipper links will jump 75 pages instead of 10. At 5000 pages, the skipper links
+will jump 250 pages instead of 75 At 10000 pages, the skipper links will jump
+500 pages instead of 250</p>
 
 
 
@@ -1086,7 +1090,7 @@ skipper link will jump forward 75 pages instead of 10.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_skipper">#</a>
-		<code><a href="source-class-paginate.html#395-406" title="Go to source code">skipper</a>( )</code>
+		<code><a href="source-class-paginate.html#397-408" title="Go to source code">skipper</a>( )</code>
 
 		<div class="description short">
 			
@@ -1123,7 +1127,7 @@ skipper link will jump forward 75 pages instead of 10.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_returnURL">#</a>
-		<code><a href="source-class-paginate.html#408-437" title="Go to source code">returnURL</a>( )</code>
+		<code><a href="source-class-paginate.html#410-439" title="Go to source code">returnURL</a>( )</code>
 
 		<div class="description short">
 			Returns the URL that will be displayed in every link. The page number will be
@@ -1184,7 +1188,7 @@ appended automatically.
 
 		<td class="name"><div>
 		<a class="anchor" href="#_resultOffset">#</a>
-		<code><a href="source-class-paginate.html#439-478" title="Go to source code">resultOffset</a>( )</code>
+		<code><a href="source-class-paginate.html#441-482" title="Go to source code">resultOffset</a>( )</code>
 
 		<div class="description short">
 			
@@ -1198,14 +1202,16 @@ appended automatically.
 
 <p>Example output:</p>
 
-<p>1 - 50 / 5,000 r(esults 1 thru 50 out of 5000)</p>
+<p>1 - 50 / 5,000 (results 1 thru 50 out of 5000)</p>
+
+<p>The display will change according to the page number.</p>
 
 
 
 
 				<h4>Returns</h4>
 				<div class="list">
-					<code>string</code><br>Page results per total results.<br />
+					<code>string</code><br />
 				</div>
 
 
@@ -1225,7 +1231,7 @@ appended automatically.
 
 		<td class="name"><div>
 		<a class="anchor" href="#_displayLinks">#</a>
-		<code><a href="source-class-paginate.html#480-510" title="Go to source code">displayLinks</a>( )</code>
+		<code><a href="source-class-paginate.html#484-514" title="Go to source code">displayLinks</a>( )</code>
 
 		<div class="description short">
 			
@@ -1258,7 +1264,7 @@ appended automatically.
 
 		<td class="name"><div>
 		<a class="anchor" href="#_pageQuery">#</a>
-		<code><a href="source-class-paginate.html#512-518" title="Go to source code">pageQuery</a>( )</code>
+		<code><a href="source-class-paginate.html#516-522" title="Go to source code">pageQuery</a>( )</code>
 
 		<div class="description short">
 			

@@ -378,8 +378,10 @@ class paginate {
      * Contains an array for the amount of pages to be skipped after a certain page number threshold. The higher the amount of page results, the larger the skip.
      * <p>Example:
      * <br>
-     * After 100 pages, the skipper link will jump forward 10 pages. 
-     * At 1000 pages, the skipper link will jump forward 75 pages instead of 10.
+     * After 100 pages, the skipper links will jump 10 pages. 
+     * At 1000 pages, the skipper links will jump 75 pages instead of 10.
+     * At 5000 pages, the skipper links will jump 250 pages instead of 75
+     * At 10000 pages, the skipper links will jump 500 pages instead of 250
      * </p>
      * @return array 
      */
@@ -441,18 +443,20 @@ class paginate {
      * 
      * Example output:
      * 
-     * 1 - 50 / 5,000 r(esults 1 thru 50 out of 5000)
+     * 1 - 50 / 5,000 (results 1 thru 50 out of 5000)
      * 
-     * @return string Page results per total results.
+     * The display will change according to the page number.
+     * 
+     * @return string 
      */
     public function resultOffset() {
         $out = "";
         $ouput = "<span>%s</span> - <span>%s</span>";
         $final = " / <span>%s</span>";
 
-        $page = $this->getPage();   // current page
-        $results = $this->results();   // nuber of results
-        $totalpages = $this->getTotalPages(); // total pages
+        $page = $this->getPage(); 
+        $results = $this->results(); 
+        $totalpages = $this->getTotalPages(); 
 
         if ($results > 0) {
             switch ($page) {
@@ -481,10 +485,10 @@ class paginate {
      * @return string Displays links.
      */
     public function displayLinks() {
-        $page = $this->getPage();   // current page
-        $totalpages = $this->getTotalPages(); // total pages
-        $nextpage = $this->nextPage();  // next page
-        $previouspage = $this->previousPage(); // previous page
+        $page = $this->getPage(); 
+        $totalpages = $this->getTotalPages();
+        $nextpage = $this->nextPage(); 
+        $previouspage = $this->previousPage(); 
 
         $OUT = '';
         $OUT .= "<div class=\"" . $this->_divClass . "\">";
